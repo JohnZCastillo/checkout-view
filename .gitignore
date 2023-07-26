@@ -1,0 +1,24 @@
+# NetBeans IDE
+/nbproject/private/
+/build/
+/dist/
+/nbbuild/
+/nbdist/
+/nbactions.xml
+/nb-configuration.xml
+/nb-configuration.json
+
+# Compiled class files
+*.class
+
+# JAR files
+*.jar
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
