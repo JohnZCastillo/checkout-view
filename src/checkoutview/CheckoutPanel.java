@@ -1,9 +1,8 @@
 package checkoutview;
 
-import java.math.BigDecimal;
-import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+
 import javax.swing.table.DefaultTableModel;
 
 public class CheckoutPanel extends javax.swing.JPanel {
@@ -15,8 +14,6 @@ public class CheckoutPanel extends javax.swing.JPanel {
     private final Consumer<String> totalDisplayAction;
     private final Consumer<String> cashDisplayAction;
     private final Consumer<String> changeDisplayAction;
-
-    private final Consumer<LinkedHashMap<Product, Integer>> productDisplayAction;
 
     private Runnable newTransactionAction;
 
@@ -42,23 +39,6 @@ public class CheckoutPanel extends javax.swing.JPanel {
             changeField.setText(change);
         };
 
-        productDisplayAction = (cart -> {
-            tableModel.setRowCount(0);
-
-            for (var product : cart.keySet()) {
-                int quantity = cart.get(product);
-
-                BigDecimal price = BigDecimal.valueOf(product.getPrice());
-                BigDecimal totalPrice = price.multiply(BigDecimal.valueOf(quantity)).setScale(2, BigDecimal.ROUND_HALF_UP);
-
-                tableModel.addRow(new Object[]{
-                    product.getName(),
-                    price,
-                    quantity,
-                    totalPrice
-                });
-            }
-        });
     }
 
     /**
@@ -136,16 +116,6 @@ public class CheckoutPanel extends javax.swing.JPanel {
      */
     public DefaultTableModel getTableModel() {
         return tableModel;
-    }
-
-    /**
-     * Gets the action to be performed when displaying products and quantities
-     * in the GUI table.
-     *
-     * @return The action to display products and quantities.
-     */
-    public Consumer<LinkedHashMap<Product, Integer>> getProductDisplayAction() {
-        return productDisplayAction;
     }
 
     /**

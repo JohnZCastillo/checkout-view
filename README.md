@@ -85,12 +85,3 @@ Consumer<LinkedHashMap<Product, Integer>> productDisplayAction = checkoutPanel.g
 
 // Retrieve the table model if needed
 DefaultTableModel tableModel = checkoutPanel.getTableModel();
-```
-
-## Dependencies
-
-This package requires Java Swing library for the graphical user interface components.
-
-## Compatibility
-
-The CheckoutView package is compatible with Java Swing-based applications and can be integrated into projects using Swing components.
