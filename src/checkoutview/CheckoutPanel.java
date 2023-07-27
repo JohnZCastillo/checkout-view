@@ -2,6 +2,8 @@ package checkoutview;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import javax.swing.JScrollBar;
+import javax.swing.SwingUtilities;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -21,10 +23,14 @@ public class CheckoutPanel extends javax.swing.JPanel {
 
     public CheckoutPanel() {
         initComponents();
-        voidDialog.setLocationRelativeTo(null);
-        paymentDialog.setLocationRelativeTo(null);
         voidDialog.pack();
         paymentDialog.pack();
+        newTransactionDialog.pack();
+        voidDialog.setLocationRelativeTo(null);
+        paymentDialog.setLocationRelativeTo(null);
+        newTransactionDialog.setLocationRelativeTo(null);
+
+        productTable.setEnabled(false);
         this.tableModel = (DefaultTableModel) productTable.getModel();
 
         totalDisplayAction = (total) -> {
@@ -118,6 +124,11 @@ public class CheckoutPanel extends javax.swing.JPanel {
         return tableModel;
     }
 
+    public void scrollToBottom() {
+        JScrollBar verticalScrollBar = tableScrollPane.getVerticalScrollBar();
+        SwingUtilities.invokeLater(() -> verticalScrollBar.setValue(verticalScrollBar.getMaximum()));
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -144,6 +155,12 @@ public class CheckoutPanel extends javax.swing.JPanel {
         jPanel6 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         paymentCashField = new javax.swing.JTextField();
+        newTransactionDialog = new javax.swing.JDialog();
+        jPanel8 = new javax.swing.JPanel();
+        confirmNewTransactionBtn = new javax.swing.JButton();
+        cancelNewTransactionBtn = new javax.swing.JButton();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         barcodeField = new javax.swing.JTextField();
@@ -151,7 +168,7 @@ public class CheckoutPanel extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        tableScrollPane = new javax.swing.JScrollPane();
         productTable = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -163,6 +180,7 @@ public class CheckoutPanel extends javax.swing.JPanel {
 
         voidDialog.setTitle("Product Void");
         voidDialog.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        voidDialog.setResizable(false);
 
         jButton4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jButton4.setText("Confirm");
@@ -220,6 +238,7 @@ public class CheckoutPanel extends javax.swing.JPanel {
 
         paymentDialog.setTitle("Payment Input");
         paymentDialog.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        paymentDialog.setResizable(false);
 
         jPanel7.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -257,6 +276,36 @@ public class CheckoutPanel extends javax.swing.JPanel {
         jPanel6.add(paymentCashField, gridBagConstraints);
 
         paymentDialog.getContentPane().add(jPanel6, java.awt.BorderLayout.CENTER);
+
+        newTransactionDialog.setTitle("Confirm New Transaction");
+        newTransactionDialog.setModal(true);
+        newTransactionDialog.setResizable(false);
+
+        confirmNewTransactionBtn.setText("Confirm");
+        confirmNewTransactionBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confirmNewTransactionBtnActionPerformed(evt);
+            }
+        });
+        jPanel8.add(confirmNewTransactionBtn);
+
+        cancelNewTransactionBtn.setText("Cancel");
+        cancelNewTransactionBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelNewTransactionBtnActionPerformed(evt);
+            }
+        });
+        jPanel8.add(cancelNewTransactionBtn);
+
+        newTransactionDialog.getContentPane().add(jPanel8, java.awt.BorderLayout.PAGE_END);
+
+        jPanel9.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel8.setText("Create a new transaction?");
+        jPanel9.add(jLabel8);
+
+        newTransactionDialog.getContentPane().add(jPanel9, java.awt.BorderLayout.CENTER);
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setLayout(new java.awt.BorderLayout(10, 10));
@@ -321,9 +370,9 @@ public class CheckoutPanel extends javax.swing.JPanel {
             }
         ));
         productTable.setRowHeight(50);
-        jScrollPane1.setViewportView(productTable);
+        tableScrollPane.setViewportView(productTable);
 
-        add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        add(tableScrollPane, java.awt.BorderLayout.CENTER);
 
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
@@ -421,7 +470,7 @@ public class CheckoutPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_salfjsActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        newTransactionAction.run();
+        newTransactionDialog.show();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -433,14 +482,26 @@ public class CheckoutPanel extends javax.swing.JPanel {
         }
 
         paymentAction.accept(paymentCashField.getText());
+        paymentCashField.setText("");
 
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void cancelNewTransactionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelNewTransactionBtnActionPerformed
+        newTransactionDialog.hide();
+    }//GEN-LAST:event_cancelNewTransactionBtnActionPerformed
+
+    private void confirmNewTransactionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmNewTransactionBtnActionPerformed
+        newTransactionDialog.hide();
+        newTransactionAction.run();
+    }//GEN-LAST:event_confirmNewTransactionBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField barcodeField;
+    private javax.swing.JButton cancelNewTransactionBtn;
     private javax.swing.JTextField cashField;
     private javax.swing.JTextField changeField;
+    private javax.swing.JButton confirmNewTransactionBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -454,6 +515,7 @@ public class CheckoutPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -461,11 +523,14 @@ public class CheckoutPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JDialog newTransactionDialog;
     private javax.swing.JTextField paymentCashField;
     private javax.swing.JDialog paymentDialog;
     private javax.swing.JTable productTable;
     private javax.swing.JButton salfjs;
+    private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JTextField totalField;
     private javax.swing.JTextField voidBarcodeField;
     private javax.swing.JDialog voidDialog;

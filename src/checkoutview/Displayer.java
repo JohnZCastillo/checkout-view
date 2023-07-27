@@ -14,6 +14,7 @@ public class Displayer<T extends Product> {
 
     // Table model of the cart table in view.
     private DefaultTableModel model;
+    private Runnable updateDisplay;
 
     /**
      * Creates a new Displayer with the given DefaultTableModel.
@@ -23,6 +24,10 @@ public class Displayer<T extends Product> {
      */
     public Displayer(DefaultTableModel model) {
         this.model = model;
+    }
+
+    public void setUpdateDisplay(Runnable updateDisplay) {
+        this.updateDisplay = updateDisplay;
     }
 
     /**
@@ -35,6 +40,7 @@ public class Displayer<T extends Product> {
      * @return The total price of the products in the cart.
      */
     public BigDecimal display(LinkedHashMap<T, Integer> cart) {
+        
         model.setRowCount(0);
 
         BigDecimal total = BigDecimal.ZERO;
@@ -56,6 +62,10 @@ public class Displayer<T extends Product> {
             });
         }
 
+        if(updateDisplay != null){
+               updateDisplay.run();
+        }
+        
         return total;
     }
 }
